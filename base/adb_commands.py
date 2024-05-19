@@ -31,7 +31,7 @@ class AdbCommands:
         os.system(f'adb disconnect {self.ip_device}')
 
     def device_connect(self):
-        print(f"CONNECT DEVISE {self.ip_device}")
+        print(f"\n CONNECT DEVICE {self.ip_device}")
         os.system(f'adb connect {self.ip_device}')
 
     def device_reboot(self):
@@ -48,6 +48,9 @@ class AdbCommands:
             self.device_disconnect()
             time.sleep(2)
             self.device_connect()
+
+    def device_logcat(self, string: str):
+        return os.system(f"adb -s {self.ip_device} logcat | Select-String -Pattern '{string}'")
 
     def device_send_key(self, key=26):
         os.system(f'adb -s {self.ip_device} shell input keyevent {key}')
