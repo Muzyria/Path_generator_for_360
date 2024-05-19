@@ -1,9 +1,7 @@
-import time
-
 import requests
 import json
 
-from create_signature_class import SyncwiseAPI
+from base.create_signature import SyncwiseAPI
 
 
 # api = SyncwiseAPI("https://api2.syncwise360.com")
@@ -11,6 +9,8 @@ from create_signature_class import SyncwiseAPI
 
 class SyncwiseClient(SyncwiseAPI):
     SECRET_KEY = None
+    #
+
     COURSE_GEOFENCE_LIST = None
     #
     COURSE_VECTOR_DETAILS = None
@@ -84,13 +84,6 @@ class SyncwiseClient(SyncwiseAPI):
         response = requests.request("POST", url, headers=headers, data=payload)
         data = response.json()
         self.COURSE_GEOFENCE_LIST = data
-
-        # poligone_list = []
-        #
-        # for i in data['resultList']:
-        #     poligone_list.append(i['points'])
-        #
-        # print(poligone_list)
 
     def course_vector_details(self, id_course):
         """
@@ -202,47 +195,3 @@ class SyncwiseClient(SyncwiseAPI):
         response = requests.request("POST", url, headers=headers, data=payload)
 
         print(response.text)
-
-
-# test_1 = SyncwiseClient("https://api2.syncwise360.com")
-# test_1.user_account_login()
-#
-#
-# print(test_1.SECRET_KEY)
-#
-# test_1.course_geofence_create('QWE5555', [
-#     {
-#       "lat": 50.09112670368736,
-#       "lng": 36.23535633087159
-#     },
-#     {
-#       "lat": 50.09242074333338,
-#       "lng": 36.24127864837647
-#     },
-#     {
-#       "lat": 50.09456822137395,
-#       "lng": 36.23578548431397
-#     }
-#   ])
-
-
-
-# test_1.course_geofence_list()
-# print(test_1.COURSE_GEOFENCE_LIST)
-#
-# test_1.course_vector_details()
-# print(test_1.COURSE_VECTOR_DETAILS_HOLES_CENTRALPATH)
-# print(test_1.COURSE_VECTOR_DETAILS)
-# print(test_1.COURSE_VECTOR_DETAILS_HOLES_PERIMETR)
-
-# for k, v in test_1.COURSE_VECTOR_DETAILS_HOLES_PERIMETR.items():  # Create shape geofence
-#     test_1.course_geofence_create(f"a_shape_{k}", test_1.COURSE_VECTOR_DETAILS_HOLES_PERIMETR[k])
-#     print(f"CREATE GEOFENCE - {k}")
-#     time.sleep(10)
-
-# for k, v in test_1.COURSE_VECTOR_DETAILS_CLUBHOUSE.items():
-#     print(k, v, len(v))
-
-# print(test_1.COURSE_VECTOR_DETAILS_HOLES_CENTRALPATH)
-
-# test_1.course_geofence_create('Back_ground', test_1.COURSE_VECTOR_DETAILS_BACKGROUND[1])

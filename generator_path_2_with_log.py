@@ -2,9 +2,8 @@ import os
 import random
 from datetime import datetime, timedelta
 
-from sincwise_clients_method import SyncwiseClient
+from base.sincwise_clients_method import SyncwiseClient
 from connect_device import ConnectDevice
-from time import perf_counter
 import time
 
 
@@ -16,6 +15,7 @@ def execution_time_decorator(func):
         print(f"Execution time for {func.__name__}: {elapsed_time:.2f} seconds")
         return result
     return wrapper
+
 
 class IntermediateCoordinatesGenerator:
     # DICT_IP_DEVICES = {'S10115002211180009': '192.168.2.30', 'L101140017180605A5': '192.168.3.174'}
