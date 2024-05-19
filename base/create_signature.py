@@ -3,9 +3,10 @@ import hmac
 import base64
 import time
 
+
 class SyncwiseAPI:
-    def __init__(self, host):
-        self.host = host
+    def __init__(self):
+        # self.host = host
         self.SLASH = "/"
         self.APIVersion = "1.0"
         self.SignatureVersion = "2.0"

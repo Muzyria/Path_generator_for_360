@@ -1,12 +1,10 @@
 
-from base.sincwise_clients_method import SyncwiseClient
-
 
 class TestPinLocations:
 
-    data = SyncwiseClient("https://api2.syncwise360.com")
+    def test_pin_locations(self, signature_api_360):
+        print(signature_api_360.SECRET_KEY)
+        signature_api_360.pin_position_update()
 
-    def test_pin_locations(self):
-        print(self.data)
 
 

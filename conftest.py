@@ -5,8 +5,10 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
+from base.sincwise_clients_method import SyncwiseClient
 
-device_name = "192.168.2.31"
+
+# device_name = "192.168.2.31"
 # device_name = "dbe407da"
 
 
@@ -19,7 +21,7 @@ def pytest_addoption(parser):
                      help="Choose language: ---")
 
 
-@pytest.fixture(scope="function", autouse=True)
+@pytest.fixture(scope="function")
 def driver(request):
     """selenium fixture"""
     print()
@@ -41,3 +43,12 @@ def driver(request):
     yield driver
     print("\nquit driver..")
     driver.quit()
+
+
+@pytest.fixture(scope="function")
+def signature_api_360():
+    data = SyncwiseClient("https://api2.syncwise360.com")
+    data.user_account_login()
+    print("__SIGNATURE_SUCCESSFUL__")
+    yield data
+
