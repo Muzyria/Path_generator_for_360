@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
+from base.adb_commands import AdbCommands
 from base.sincwise_clients_method import SyncwiseClient
 
 
@@ -50,5 +51,7 @@ def signature_api_360():
     data = SyncwiseClient("https://api2.syncwise360.com")
     data.user_account_login()
     print("__SIGNATURE_SUCCESSFUL__")
-    yield data
+    return data
+
+
 
