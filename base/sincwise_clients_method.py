@@ -44,7 +44,7 @@ class SyncwiseClient:
     # PRIVATE
 
 
-    def pin_position_update(self):
+    def pin_position_update(self, locations):
         """
         Change Pin Position
         """
@@ -66,8 +66,8 @@ class SyncwiseClient:
                     "positions": [
                         {
                             "position": 1,
-                            "latitude": 50.08200445682767,
-                            "longitude": 36.230381742010366,
+                            "latitude": locations[0],
+                            "longitude": locations[1],
                             "active": 1
                         }
                     ]
