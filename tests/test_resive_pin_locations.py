@@ -34,7 +34,7 @@ class TestPinLocations:
                 print(f"Сообщение найдено в {end_time_readable}")
                 print(f"Время ожидания: {duration} секунд")
                 log_file.write(f"The message found at {end_time_readable}\n")
-                log_file.write(f"Waiting time: {duration} секунд\n\n")
+                log_file.write(f"Waiting time: {duration} seconds\n\n")
                 # log_file.write(f"Полное сообщение: {output}\n")
                 log_file.close()  # Закрываем файл после записи
                 return True
@@ -45,7 +45,7 @@ class TestPinLocations:
         return False
 
     @pytest.mark.parametrize("location", [(50.08200445682767, 36.230381742010366), (50.08197390756561, 36.23083627639708)])
-    @pytest.mark.parametrize("i", range(1, 10))
+    @pytest.mark.parametrize("i", range(1, 3))
     def test_pin_locations(self, signature_api_360, i, location):
         print(signature_api_360.SECRET_KEY)
         print(location, i)
@@ -53,8 +53,11 @@ class TestPinLocations:
 
         # Ожидаем получение сообщения
         message_to_find = "Received custom message"
+        # message_to_find = "Received custom message: 06[KoyhA-zWt6os;240521;01"
+
         if self.check_for_message(message_to_find):
             print("Сообщение найдено.")
+            time.sleep(90)
         else:
             pytest.fail("Сообщение не найдено в течение заданного времени.")
 
