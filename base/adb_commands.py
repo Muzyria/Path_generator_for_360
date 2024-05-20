@@ -49,8 +49,6 @@ class AdbCommands:
             time.sleep(2)
             self.device_connect()
 
-    def device_logcat(self, string: str):
-        return os.system(f"adb -s {self.ip_device} logcat | Select-String -Pattern '{string}'")
 
     def device_send_key(self, key=26):
         os.system(f'adb -s {self.ip_device} shell input keyevent {key}')

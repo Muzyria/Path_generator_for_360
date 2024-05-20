@@ -1,7 +1,5 @@
-import os
 import subprocess
 import time
-
 import pytest
 from base.adb_commands import AdbCommands
 
@@ -10,28 +8,44 @@ class TestPinLocations:
 
     @pytest.fixture(autouse=True)
     def adb_commands(self):
-        self.adb_command = AdbCommands("192.168.0.105")
+        self.adb_command = AdbCommands("192.168.0.106")
         self.adb_command.device_connect()
 
-    def read_device_logs(self):
-        # command = 'adb logcat | Select-String -Pattern "Received custom message:"'
-        pass
+    def run_adb_logcat(self):
+        # Запуск команды adb logcat
+        process = subprocess.Popen('adb logcat -d', stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                                   shell=True)
+        output, _ = process.communicate()
+        return output
 
+    def check_for_message(self, message_to_find, timeout=300):
+        start_time = time.time()
+        start_time_readable = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start_time))
+        print(f"Начало ожидания сообщения в {start_time_readable}")
 
-    def check_logcat(self, timeout=10):
-        command = 'adb logcat | Select-String -Pattern "Received custom message:"'
-        # subprocess.run(["powershell", "-Command", command])
+        while time.time() - start_time < timeout:
+            output = self.run_adb_logcat()
+            if message_to_find in output:
+                end_time = time.time()
+                end_time_readable = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(end_time))
+                duration = end_time - start_time
+                print(f"Сообщение найдено в {end_time_readable}")
+                print(f"Полное сообщение: {output}")
+                print(f"Время ожидания: {duration} секунд")
+                return True
+            time.sleep(1)  # Проверяем каждую секунду
 
-        subprocess.run(["start", "powershell", "-Command", command], shell=True)
-        time.sleep(15)
+        print(f"Сообщение не найдено в течение {timeout} секунд.")
+        return False
 
-    @pytest.mark.parametrize("i", range(1, 3))
+    @pytest.mark.parametrize("i", range(1, 2))
     def test_pin_locations(self, signature_api_360, i):
         print(signature_api_360.SECRET_KEY)
         signature_api_360.pin_position_update()
 
-        # Ожидаем, пока данные придут на устройство
-        data_received = self.check_logcat(timeout=60)
-
-        # Проверяем, были ли данные получены на устройстве
-        # assert data_received, "Data was not received on the device."
+        # Ожидаем получение сообщения
+        message_to_find = "Received custom message"
+        if self.check_for_message(message_to_find):
+            print("Сообщение найдено.")
+        else:
+            pytest.fail("Сообщение не найдено в течение заданного времени.")
