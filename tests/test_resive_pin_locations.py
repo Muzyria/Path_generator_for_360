@@ -8,7 +8,7 @@ class TestPinLocations:
 
     @pytest.fixture(autouse=True)
     def adb_commands(self):
-        self.adb_command = AdbCommands("192.168.0.106")
+        self.adb_command = AdbCommands("192.168.0.105")
         self.adb_command.device_connect()
 
     def run_adb_logcat(self):
@@ -18,7 +18,7 @@ class TestPinLocations:
         output, _ = process.communicate()
         return output
 
-    def check_for_message(self, message_to_find, timeout=1200):
+    def check_for_message(self, message_to_find, timeout=3600):
         start_time = time.time()
         start_time_readable = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start_time))
         print(f"Начало ожидания сообщения в {start_time_readable}")
@@ -35,17 +35,19 @@ class TestPinLocations:
                 print(f"Время ожидания: {duration} секунд")
                 log_file.write(f"The message found at {end_time_readable}\n")
                 log_file.write(f"Waiting time: {duration} seconds\n\n")
-                # log_file.write(f"Полное сообщение: {output}\n")
                 log_file.close()  # Закрываем файл после записи
+
+                print("ДОПОЛНИТЕЛЬНОЕ ОЖИДАНИЕ 120 СУКУНД")
+                time.sleep(120)
                 return True
             time.sleep(1)  # Проверяем каждую секунду
 
-        log_file.write(f"Сообщение не найдено в течение {timeout} секунд.\n")
+        log_file.write(f"Message not found for {timeout} seconds.\n")
         log_file.close()  # Закрываем файл после записи
         return False
 
     @pytest.mark.parametrize("location", [(50.08200445682767, 36.230381742010366), (50.08197390756561, 36.23083627639708)])
-    @pytest.mark.parametrize("i", range(1, 3))
+    @pytest.mark.parametrize("i", range(1, 100))
     def test_pin_locations(self, signature_api_360, i, location):
         print(signature_api_360.SECRET_KEY)
         print(location, i)
@@ -57,7 +59,8 @@ class TestPinLocations:
 
         if self.check_for_message(message_to_find):
             print("Сообщение найдено.")
-            time.sleep(90)
+            print("Ожидание внутри теста 60 секунд")
+            time.sleep(60)
         else:
             pytest.fail("Сообщение не найдено в течение заданного времени.")
 
