@@ -55,6 +55,9 @@ class AdbCommands:
     def touch_screen(self, x=700, y=500):
         os.system(f'adb -s {self.ip_device} shell input tap {x} {y}')
 
+    def swipe_screen(self, x1=100, y1=500, x2=200, y2=500, speed=250):
+        os.system(f'adb -s {self.ip_device} shell input swipe {x1} {y1} {x2} {y2} {speed}')
+
     def device_send_coordinate(self, location):
         os.system(rf'adb -s {self.ip_device}:5555 shell am broadcast -a ua.org.jeff.mockgps.ACTION_LOCATION --es location \"{location}\"')  # "50.012356,36.243361"
 

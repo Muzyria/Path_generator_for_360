@@ -104,7 +104,7 @@ class TestPinLocations:
         output, _ = process.communicate()
         return output
 
-    def check_for_message(self, message_to_find, timeout=3600, interval=20):
+    def check_for_message(self, message_to_find, timeout=3600, interval=60):
         start_time = time.time()
         start_time_readable = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start_time))
         print(f"Начало ожидания сообщения в {start_time_readable}")
@@ -118,7 +118,9 @@ class TestPinLocations:
             if current_time - last_adb_execution_time >= interval:
                 # Выполняем команду adb
                 # subprocess.run(['adb', 'shell input tap 700 500'])
-                self.adb_command.touch_screen(800, 700)
+                # self.adb_command.touch_screen(800, 700)
+                self.adb_command.swipe_screen(100, 500, 200, 500, 250)
+                self.adb_command.swipe_screen(200, 500, 100, 500, 250)
                 last_adb_execution_time = current_time  # Обновляем время последнего выполнения adb
 
             output = self.run_adb_logcat()
@@ -133,7 +135,9 @@ class TestPinLocations:
                 log_file.close()  # Закрываем файл после записи
 
                 print("ДОПОЛНИТЕЛЬНОЕ ОЖИДАНИЕ 120 СУКУНД")
-                time.sleep(120)
+                time.sleep(60)
+                self.adb_command.touch_screen(800, 700)
+                time.sleep(60)
                 return True
             time.sleep(1)  # Проверяем каждую секунду
 
@@ -156,7 +160,10 @@ class TestPinLocations:
         if self.check_for_message(message_to_find):
             print("Подготовка следующего теста.")
             print("Ожидание внутри теста 60 секунд")
+            self.adb_command.touch_screen(800, 700)
             time.sleep(60)
+            self.adb_command.touch_screen(800, 700)
+
         else:
             pytest.fail("Сообщение не найдено в течение заданного времени.")
 
