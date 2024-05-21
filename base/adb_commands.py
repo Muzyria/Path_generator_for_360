@@ -49,7 +49,6 @@ class AdbCommands:
             time.sleep(2)
             self.device_connect()
 
-
     def device_send_key(self, key=26):
         os.system(f'adb -s {self.ip_device} shell input keyevent {key}')
 
