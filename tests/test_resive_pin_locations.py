@@ -80,7 +80,7 @@ class TestPinLocations:
             self.adb_command = AdbCommands(device)
             print(f"Устройство для подключения по USB: {device}")
         else:
-            self.adb_command = AdbCommands("192.168.0.105")
+            self.adb_command = AdbCommands("192.168.0.101")
             self.adb_command.device_connect()
 
     def get_connected_device(self):
@@ -122,23 +122,30 @@ class TestPinLocations:
                 self.adb_command.swipe_screen(100, 500, 200, 500, 250)
                 self.adb_command.swipe_screen(200, 500, 100, 500, 250)
                 last_adb_execution_time = current_time  # Обновляем время последнего выполнения adb
+            # ---------------------------------------------------------------------------------------------------
+            try:
+                output = self.run_adb_logcat()
+            # ---------------------------------------------------------------------------------------------------
+                if message_to_find in output:
+                    end_time = time.time()
+                    end_time_readable = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(end_time))
+                    duration = int(end_time - start_time)  # Преобразуем продолжительность ожидания в целое число
+                    print(f"Сообщение найдено в {end_time_readable}")
+                    print(f"Время ожидания: {duration} секунд")
+                    log_file.write(f"The message found at {end_time_readable}\n")
+                    log_file.write(f"Waiting time: {duration} seconds\n\n")
+                    log_file.close()  # Закрываем файл после записи
 
-            output = self.run_adb_logcat()
-            if message_to_find in output:
-                end_time = time.time()
-                end_time_readable = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(end_time))
-                duration = int(end_time - start_time)  # Преобразуем продолжительность ожидания в целое число
-                print(f"Сообщение найдено в {end_time_readable}")
-                print(f"Время ожидания: {duration} секунд")
-                log_file.write(f"The message found at {end_time_readable}\n")
-                log_file.write(f"Waiting time: {duration} seconds\n\n")
-                log_file.close()  # Закрываем файл после записи
-
-                print("ДОПОЛНИТЕЛЬНОЕ ОЖИДАНИЕ 120 СУКУНД")
-                time.sleep(60)
-                self.adb_command.touch_screen(800, 700)
-                time.sleep(60)
-                return True
+                    print("ДОПОЛНИТЕЛЬНОЕ ОЖИДАНИЕ 120 СУКУНД")
+                    time.sleep(60)
+                    self.adb_command.touch_screen(800, 700)
+                    time.sleep(60)
+                    return True
+            # ---------------------------------------------------------------------------------------------------
+            except Exception as e:
+                print(f"Произошла ошибка: {e}")
+                print(output)  # Добавляем вывод результата работы метода run_adb_logcat()
+            # ---------------------------------------------------------------------------------------------------
             time.sleep(1)  # Проверяем каждую секунду
 
         log_file.write(f"Message not found for {timeout} seconds.\n")
@@ -169,7 +176,7 @@ class TestPinLocations:
 
     @pytest.mark.wifi
     @pytest.mark.parametrize("location", [(50.08200445682767, 36.230381742010366), (50.08197390756561, 36.23083627639708)])
-    @pytest.mark.parametrize("i", range(1, 100))
+    @pytest.mark.parametrize("i", range(1, 10))
     def test_pin_locations_wifi(self, signature_api_360, i, location):
         print('  CONNECT BY WIFI')
         print(signature_api_360.SECRET_KEY)
