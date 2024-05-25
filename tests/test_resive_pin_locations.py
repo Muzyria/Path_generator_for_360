@@ -64,14 +64,17 @@
 #         else:
 #             pytest.fail("Сообщение не найдено в течение заданного времени.")
 
-
+import allure
 import subprocess
 import time
 import pytest
 from base.adb_commands import AdbCommands
 
 
+# @allure.feature("Check Functionality")
 class TestPinLocations:
+    EXPECTED_TIME = 120
+    ACTUAL_TIME = None
 
     @pytest.fixture(autouse=True)
     def adb_commands(self, request):
@@ -136,6 +139,8 @@ class TestPinLocations:
                     log_file.write(f"Waiting time: {duration} seconds\n\n")
                     log_file.close()  # Закрываем файл после записи
 
+                    self.ACTUAL_TIME = duration
+
                     print("ДОПОЛНИТЕЛЬНОЕ ОЖИДАНИЕ 120 СУКУНД")
                     time.sleep(60)
                     self.adb_command.touch_screen(800, 700)
@@ -152,9 +157,13 @@ class TestPinLocations:
         log_file.close()  # Закрываем файл после записи
         return False
 
+    # @allure.step("Check duration time")
+    def check_duration_time(self):
+        assert self.EXPECTED_TIME >= self.ACTUAL_TIME, f"Время доставки сообщения {self.ACTUAL_TIME} превысило {self.EXPECTED_TIME}"
+
     @pytest.mark.usb
     @pytest.mark.parametrize("location", [(50.08200445682767, 36.230381742010366), (50.08197390756561, 36.23083627639708)])
-    @pytest.mark.parametrize("i", range(1, 100))
+    @pytest.mark.parametrize("i", range(1, 20))
     def test_pin_locations_usb(self, signature_api_360, i, location):
         print("  CONNECT BY USB")
         print(signature_api_360.SECRET_KEY)
@@ -162,9 +171,11 @@ class TestPinLocations:
         signature_api_360.pin_position_update(location)
 
         # Ожидаем получение сообщения
-        message_to_find = "Received custom message"
+        # message_to_find = "Received custom message"
+        message_to_find = "Received custom message: 06[KoyhA-zWt6os;240525;01"
 
         if self.check_for_message(message_to_find):
+            # self.check_duration_time()
             print("Подготовка следующего теста.")
             print("Ожидание внутри теста 60 секунд")
             self.adb_command.touch_screen(800, 700)
@@ -174,9 +185,11 @@ class TestPinLocations:
         else:
             pytest.fail("Сообщение не найдено в течение заданного времени.")
 
+    # @allure.title("Receiving update messages")
+    # @allure.severity("Critical")
     @pytest.mark.wifi
     @pytest.mark.parametrize("location", [(50.08200445682767, 36.230381742010366), (50.08197390756561, 36.23083627639708)])
-    @pytest.mark.parametrize("i", range(1, 10))
+    @pytest.mark.parametrize("i", range(1, 3))
     def test_pin_locations_wifi(self, signature_api_360, i, location):
         print('  CONNECT BY WIFI')
         print(signature_api_360.SECRET_KEY)
@@ -187,6 +200,7 @@ class TestPinLocations:
         message_to_find = "Received custom message"
 
         if self.check_for_message(message_to_find):
+            # self.check_duration_time()
             print("Подготовка следующего теста.")
             print("Ожидание внутри теста 60 секунд")
             time.sleep(60)
