@@ -83,7 +83,7 @@ class TestPinLocations:
             self.adb_command = AdbCommands(device)
             print(f"Устройство для подключения по USB: {device}")
         else:
-            self.adb_command = AdbCommands("192.168.0.101")
+            self.adb_command = AdbCommands("192.168.0.105")
             self.adb_command.device_connect()
 
     def get_connected_device(self):
@@ -102,10 +102,16 @@ class TestPinLocations:
 
     def run_adb_logcat(self):
         # Запуск команды adb logcat
-        process = subprocess.Popen('adb logcat -d', stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
-                                   shell=True)
+        # process = subprocess.Popen('adb logcat -d', stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+        #                            shell=True)
+        # output, _ = process.communicate()
+        # return output
+
+        # --------------
+        # Запуск команды adb logcat
+        process = subprocess.Popen('adb logcat -d', stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         output, _ = process.communicate()
-        return output
+        return output.decode('utf-8', errors='ignore')
 
     def check_for_message(self, message_to_find, timeout=3600, interval=60):
         start_time = time.time()
@@ -171,8 +177,7 @@ class TestPinLocations:
         signature_api_360.pin_position_update(location)
 
         # Ожидаем получение сообщения
-        # message_to_find = "Received custom message"
-        message_to_find = "Received custom message: 06[KoyhA-zWt6os;240525;01"
+        message_to_find = "Received custom message"
 
         if self.check_for_message(message_to_find):
             # self.check_duration_time()
@@ -189,7 +194,7 @@ class TestPinLocations:
     # @allure.severity("Critical")
     @pytest.mark.wifi
     @pytest.mark.parametrize("location", [(50.08200445682767, 36.230381742010366), (50.08197390756561, 36.23083627639708)])
-    @pytest.mark.parametrize("i", range(1, 3))
+    @pytest.mark.parametrize("i", range(1, 20))
     def test_pin_locations_wifi(self, signature_api_360, i, location):
         print('  CONNECT BY WIFI')
         print(signature_api_360.SECRET_KEY)
@@ -198,6 +203,10 @@ class TestPinLocations:
 
         # Ожидаем получение сообщения
         message_to_find = "Received custom message"
+
+        # text_message = str(location[0])[:8]
+        # message_to_find = f"06[KoyhA-zWt6os;240526;01,{text_message}"
+        # print(message_to_find)
 
         if self.check_for_message(message_to_find):
             # self.check_duration_time()
