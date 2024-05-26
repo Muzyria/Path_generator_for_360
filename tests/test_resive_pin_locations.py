@@ -202,11 +202,11 @@ class TestPinLocations:
         signature_api_360.pin_position_update(location)
 
         # Ожидаем получение сообщения
-        message_to_find = "Received custom message"
+        # message_to_find = "Received custom message"
 
-        # text_message = str(location[0])[:8]
-        # message_to_find = f"06[KoyhA-zWt6os;240526;01,{text_message}"
-        # print(message_to_find)
+        text_message = str(location[0])[:8]
+        message_to_find = f"Received custom message: 06[KoyhA-zWt6os;240526;01,{text_message}"
+        print(message_to_find)
 
         if self.check_for_message(message_to_find):
             # self.check_duration_time()
