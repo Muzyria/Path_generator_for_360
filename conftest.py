@@ -73,7 +73,7 @@ def appium_service():
 
 
 @pytest.fixture(scope="function")
-def appium_driver():
+def appium_driver(appium_service):
     """appium fixture"""
     print()
     print('__USE_APPIUM_FIXTURE__')
