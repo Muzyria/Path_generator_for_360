@@ -5,11 +5,15 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
+from appium import webdriver
+from appium.options.android import UiAutomator2Options
+
+
 from base.adb_commands import AdbCommands
 from base.sincwise_clients_method import SyncwiseClient
 
 
-# device_name = "192.168.2.31"
+device_name = "192.168.0.104"
 # device_name = "dbe407da"
 
 
@@ -54,4 +58,21 @@ def signature_api_360():
     return data
 
 
+@pytest.fixture(scope="function")
+def appium_driver():
+    """appium fixture"""
+    print()
+    print('__USE_APPIUM_FIXTURE__')
+    print("\nstart appium_driver for test..")
 
+    capabilities = dict(
+        platformName='android',
+        automationName='uiautomator2',
+        deviceName=device_name
+    )
+
+    appium_server_url = 'http://localhost:4723'
+    appium_driver = webdriver.Remote(appium_server_url, options=UiAutomator2Options().load_capabilities(capabilities))
+    yield appium_driver
+    print("\nquit appium_driver..")
+    appium_driver.quit()
