@@ -1,5 +1,6 @@
 
 import pytest
+import subprocess
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -7,7 +8,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
-
+from appium.webdriver.appium_service import AppiumService
 
 from base.adb_commands import AdbCommands
 from base.sincwise_clients_method import SyncwiseClient
@@ -56,6 +57,19 @@ def signature_api_360():
     data.user_account_login()
     print("__SIGNATURE_SUCCESSFUL__")
     return data
+
+
+@pytest.fixture(scope="function")
+def appium_service():
+    """appium service fixture"""
+    print("\nstart appium_service")
+    service = AppiumService()
+    service.start(
+        args=['--address', '127.0.0.1', '-p', '4723'],
+        timeout_ms=20000,
+    )
+    yield service
+    service.stop()
 
 
 @pytest.fixture(scope="function")
