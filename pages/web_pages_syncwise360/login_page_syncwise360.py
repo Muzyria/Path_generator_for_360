@@ -34,12 +34,8 @@ class LoginPageSyncwise360(BasePage):
     def click_login_button(self):
         self.wait.until(EC.element_to_be_clickable(self.BUTTON_LOGIN)).click()
 
-
     @my_decorator
     def spinner(self):
         self.wait.until(EC.visibility_of_element_located(self.SPINNER))
 
         self.wait.until(EC.invisibility_of_element_located(self.SPINNER))
-
-
-

@@ -14,7 +14,7 @@ from base.adb_commands import AdbCommands
 from base.sincwise_clients_method import SyncwiseClient
 
 
-device_name = "192.168.0.104"
+# device_name = "192.168.0.101"
 # device_name = "dbe407da"
 
 
@@ -73,11 +73,13 @@ def appium_service():
 
 
 @pytest.fixture(scope="function")
-def appium_driver(appium_service):
+def appium_driver(appium_service, request):
     """appium fixture"""
     print()
     print('__USE_APPIUM_FIXTURE__')
     print("\nstart appium_driver for test..")
+
+    device_name = request.cls.IP
 
     capabilities = dict(
         platformName='android',

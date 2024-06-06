@@ -13,3 +13,7 @@ class BasePage:
     def is_opened(self):
         self.wait.until(EC.url_to_be(self.PAGE_URL))
 
+
+class AppiumBasePage:
+    def __init__(self, appium_driver):
+        self.appium_driver = appium_driver
