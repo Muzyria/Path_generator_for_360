@@ -30,3 +30,5 @@ class TestPowerScheduler:
         test = SettingsDateTime(appium_driver)
         test.qwerety()
         print("TEST ____ FINISH")
+
+

@@ -10,12 +10,7 @@ from appium import webdriver
 from appium.options.android import UiAutomator2Options
 from appium.webdriver.appium_service import AppiumService
 
-from base.adb_commands import AdbCommands
 from base.sincwise_clients_method import SyncwiseClient
-
-
-# device_name = "192.168.0.101"
-# device_name = "dbe407da"
 
 
 def pytest_addoption(parser):

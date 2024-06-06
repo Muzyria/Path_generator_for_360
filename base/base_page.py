@@ -17,3 +17,5 @@ class BasePage:
 class AppiumBasePage:
     def __init__(self, appium_driver):
         self.appium_driver = appium_driver
+        self.wait = WebDriverWait(appium_driver, 30, poll_frequency=1)
+
