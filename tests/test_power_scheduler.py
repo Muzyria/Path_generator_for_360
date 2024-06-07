@@ -34,8 +34,17 @@ class TestPowerScheduler:
 
         self.settings_date_time.click_set_power_time()
 
-        self.settings_date_time.click_pm_label()
-        self.settings_date_time.set_hours(6)
-        self.settings_date_time.set_minutes(20)
+        new_time = self.settings_date_time.get_current_time_tuple()
+        print(new_time)
+
+        self.settings_date_time.switch_am_pm_time(new_time[2])
+
+        self.settings_date_time.set_hours(new_time[0])
+        self.settings_date_time.set_minutes(new_time[1])
         self.settings_date_time.button_ok_click()
+
+        self.adb_command.get_time_off()
+        self.adb_command.get_random_power_off_time()
+
+
         print("TEST ____ FINISH")

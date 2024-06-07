@@ -112,3 +112,27 @@ class AdbCommands:
     def open_device_developer_options_settings(self):
         """Open pages Settings Developer Options"""
         os.system(f'adb -s {self.ip_device} shell am start -a android.settings.APPLICATION_DEVELOPMENT_SETTINGS')
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def get_time_off(self):
+        result = subprocess.run(
+            ['adb', '-s', self.ip_device, 'shell', 'settings', 'get', 'system', 'power_off_time'],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        time_off_value = result.stdout.strip()
+        print(f'time_off {time_off_value}', end='\n')
+        return time_off_value
+
+    def get_random_power_off_time(self):
+        result = subprocess.run(
+            ['adb', '-s', self.ip_device, 'shell', 'settings', 'get', 'system', 'random_power_off_time'],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        random_power_off_time_value = result.stdout.strip()
+        print(f'random_power_off_time {random_power_off_time_value}', end='\n')
+        return random_power_off_time_value
+    # ------------------------------------------------------------------------------------------------------------------
