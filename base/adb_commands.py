@@ -135,4 +135,10 @@ class AdbCommands:
         random_power_off_time_value = result.stdout.strip()
         print(f'random_power_off_time {random_power_off_time_value}', end='\n')
         return random_power_off_time_value
+
+    def put_time_off(self, value="1000"):
+        os.system(f'adb -s {self.ip_device} shell settings put system power_off_time {value}')
+
+    def put_random_time_off(self, value="1000"):
+        os.system(f'adb -s {self.ip_device} shell settings put system random_power_off_time {value}')
     # ------------------------------------------------------------------------------------------------------------------

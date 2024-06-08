@@ -50,7 +50,7 @@ class SettingsDateTime(AppiumBasePage):
         self.wait.until(EC.element_to_be_clickable(self.BUTTON_OK)).click()
 
     @staticmethod
-    def get_current_time_tuple(extra_minute=5):
+    def get_new_time_tuple(extra_minute=5):
         # Получаем текущее время
         now = datetime.now()
         # Извлекаем часы и минуты

@@ -10,6 +10,8 @@ from appium import webdriver
 from appium.options.android import UiAutomator2Options
 from appium.webdriver.appium_service import AppiumService
 
+from selenium.common.exceptions import WebDriverException
+
 from base.sincwise_clients_method import SyncwiseClient
 
 
@@ -79,11 +81,15 @@ def appium_driver(appium_service, request):
     capabilities = dict(
         platformName='android',
         automationName='uiautomator2',
-        deviceName=device_name
+        deviceName=device_name,
+        newCommandTimeout=600
     )
 
     appium_server_url = 'http://localhost:4723'
     appium_driver = webdriver.Remote(appium_server_url, options=UiAutomator2Options().load_capabilities(capabilities))
     yield appium_driver
     print("\nquit appium_driver..")
-    appium_driver.quit()
+    try:
+        appium_driver.quit()
+    except WebDriverException as e:
+        print("Session terminated unexpectedly:", e)
