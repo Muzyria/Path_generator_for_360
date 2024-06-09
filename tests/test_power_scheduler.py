@@ -8,7 +8,7 @@ from pages.device_pages.settings_date_time_page import SettingsDateTime
 
 
 def log_message(message):
-    with open("log.txt", "a", encoding="utf-8") as log_file:
+    with open("test_logs/log_scheduler.txt", "a", encoding="utf-8") as log_file:
         log_file.write(message + "\n")
 
 
@@ -30,6 +30,8 @@ def calculate_timeout(reboot_time_str):
 
 class TestPowerScheduler:
     IP = "192.168.0.101"
+    MESSAGE_REBOOT = "START u0 {act=android.intent.action.REBOOT"
+    MESSAGE_SHUTDOWN = "START u0 {act=android.intent.action.ACTION_REQUEST_SHUTDOWN"
 
     settings_date_time: SettingsDateTime
 
@@ -108,7 +110,7 @@ class TestPowerScheduler:
 
 
         self.adb_command.put_time_off("0230")
-        self.adb_command.put_random_time_off("0239")
+        self.adb_command.put_random_time_off("0246")
 
 
         time_off = self.adb_command.get_time_off()
@@ -117,8 +119,7 @@ class TestPowerScheduler:
         # self.adb_command.device_send_key(4)
 
         # Ожидаем получение сообщения
-        message_to_find = "START u0 {act=android.intent.action.REBOOT"
-        # message_to_find = "START u0 {act=android.intent.action.ACTION_REQUEST_SHUTDOWN"
+        message_to_find = self.MESSAGE_REBOOT
 
         if self.check_for_message(message_to_find, random_time_off):
             print("__OK__")
