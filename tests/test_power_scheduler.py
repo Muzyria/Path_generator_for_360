@@ -1,6 +1,7 @@
 
 import subprocess
 import time
+from datetime import datetime
 import pytest
 from base.adb_commands import AdbCommands
 
@@ -8,11 +9,12 @@ from pages.device_pages.settings_date_time_page import SettingsDateTime
 
 
 def log_message(message):
-    with open("test_logs/log_scheduler.txt", "a", encoding="utf-8") as log_file:
+    with open("tests/test_logs/log_scheduler.txt", "a", encoding="utf-8") as log_file:
         log_file.write(message + "\n")
 
 
-def calculate_timeout(reboot_time_str):
+def calculate_timeout(reboot_time_str) -> int:
+    """расчитывает время ожидания сообщения в секундах"""
     current_time = time.localtime()
     current_time_in_minutes = current_time.tm_hour * 60 + current_time.tm_min
 
@@ -95,37 +97,42 @@ class TestPowerScheduler:
         """
 
         print("TEST __ START")
-        # self.adb_command.open_date_settings()
-        #
-        # self.settings_date_time.click_set_power_time()
-        #
-        # new_time = self.settings_date_time.get_new_time_tuple()
-        # print(new_time)
+        log_message(f"test first start {datetime.now().strftime("%H:%M:%S")}")
+        self.adb_command.open_date_settings()
 
-        # self.settings_date_time.switch_am_pm_time(new_time[2])
-        #
-        # self.settings_date_time.set_hours(new_time[0])
-        # self.settings_date_time.set_minutes(new_time[1])
-        # self.settings_date_time.button_ok_click()
+        self.settings_date_time.click_set_power_time()
 
+        new_time = self.settings_date_time.get_new_time_tuple()
+        print(new_time)
+        log_message(f"Устанавливаем новое время планировщика на {new_time}")
 
-        self.adb_command.put_time_off("0230")
-        self.adb_command.put_random_time_off("0246")
+        self.settings_date_time.switch_am_pm_time(new_time[2])
 
+        self.settings_date_time.set_hours(new_time[0])
+        self.settings_date_time.set_minutes(new_time[1])
+        self.settings_date_time.button_ok_click()
+
+        # self.adb_command.put_time_off("0230")
+        # self.adb_command.put_random_time_off("0246")
 
         time_off = self.adb_command.get_time_off()
-        random_time_off = self.adb_command.get_random_power_off_time()
+        log_message(f"Время перезагрузки установлено {time_off[:2]}:{time_off[2:]}")
 
-        # self.adb_command.device_send_key(4)
+        random_time_off = self.adb_command.get_random_power_off_time()
+        log_message(f"Random time перезагрузки установлено {random_time_off[:2]}:{random_time_off[2:]}")
+
+        self.adb_command.device_send_key(4)
 
         # Ожидаем получение сообщения
         message_to_find = self.MESSAGE_REBOOT
 
         if self.check_for_message(message_to_find, random_time_off):
             print("__OK__")
+            log_message(f"Тест прошел успешно, перезагрузка началась в {datetime.now().strftime("%H:%M:%S")}")
             print("ОЖИДАНИЕ REBOOT 120 СУКУНД")
             # time.sleep(120)
         else:
+            log_message(f"Тест НЕ прошел в {datetime.now().strftime("%H:%M:%S")}")
             pytest.fail("Сообщение не найдено в течение заданного времени.")
 
         print("TEST ____ FINISH")

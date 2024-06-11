@@ -50,7 +50,10 @@ class SettingsDateTime(AppiumBasePage):
         self.wait.until(EC.element_to_be_clickable(self.BUTTON_OK)).click()
 
     @staticmethod
-    def get_new_time_tuple(extra_minute=5):
+    def get_new_time_tuple(extra_minute=5) -> tuple:
+        """конвертер текущего времени в формат AM/PM
+            округляем миуты равным 5
+            также добовляем 5 минут к финальному результату"""
         # Получаем текущее время
         now = datetime.now()
         # Извлекаем часы и минуты

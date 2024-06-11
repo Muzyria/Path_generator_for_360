@@ -123,7 +123,7 @@ class AdbCommands:
         )
         time_off_value = result.stdout.strip()
         print(f'time_off {time_off_value}', end='\n')
-        return time_off_value
+        return time_off_value.zfill(4)
 
     def get_random_power_off_time(self):
         result = subprocess.run(
@@ -134,7 +134,7 @@ class AdbCommands:
         )
         random_power_off_time_value = result.stdout.strip()
         print(f'random_power_off_time {random_power_off_time_value}', end='\n')
-        return random_power_off_time_value
+        return random_power_off_time_value.zfill(4)
 
     def put_time_off(self, value="1000"):
         os.system(f'adb -s {self.ip_device} shell settings put system power_off_time {value}')
