@@ -128,9 +128,10 @@ class TestPowerScheduler:
 
         if self.check_for_message(message_to_find, random_time_off):
             print("__OK__")
-            log_message(f"Тест прошел успешно, перезагрузка началась в {datetime.now().strftime("%H:%M:%S")}")
+            log_message(f"Тест прошел успешно, перезагрузка началась в {datetime.now().strftime("%H:%M:%S")}\n")
+
             print("ОЖИДАНИЕ REBOOT 120 СУКУНД")
-            # time.sleep(120)
+            time.sleep(120)
         else:
             log_message(f"Тест НЕ прошел в {datetime.now().strftime("%H:%M:%S")}")
             pytest.fail("Сообщение не найдено в течение заданного времени.")
