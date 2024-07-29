@@ -146,7 +146,7 @@ class GeofenceADVEdit:
             "id_geofenceType": 17,
             "points": coordinate,
             "active": 1,
-            "name": "1_1",
+            "name": "6",
             "disabilityBypass": 0,
             "marshallBypass": 0
         })
