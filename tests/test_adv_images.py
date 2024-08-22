@@ -4,7 +4,7 @@ from base.sincwise_geofence_metods import GeofenceADVEdit
 
 
 class TestADVImages:
-    geofence_list = [43977, 43978, 43979, 43980, 43981, 43982, 43983]
+    geofence_list = [44713, 44714, 44715, 44716, 44717, 44718, 44719]
     data = None
     geofence_adv_edit = None
 

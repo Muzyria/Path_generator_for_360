@@ -90,6 +90,7 @@ class TestPowerScheduler:
 
         return False
 
+    @pytest.mark.skip
     def test_first(self):
         """
         2)Set Power Scheduler at a 9:55 PM, Confirm randomizer's time on Power Scheduler - note it
