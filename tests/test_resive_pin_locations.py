@@ -18,7 +18,7 @@ class TestPinLocations:
             self.adb_command = AdbCommands(device)
             print(f"Устройство для подключения по USB: {device}")
         else:
-            self.adb_command = AdbCommands("192.168.0.105")
+            self.adb_command = AdbCommands("192.168.0.104")
             self.adb_command.device_connect()
 
     def get_connected_device(self):
@@ -140,7 +140,7 @@ class TestPinLocations:
         # message_to_find = "Received custom message"
 
         text_message = str(location[0])[:8]
-        message_to_find = f"Received custom message: 06[KoyhA-zWt6os;240526;01,{text_message}"
+        message_to_find = f"Received custom message: 06[KoyhA-zWt6os;241112;01,{text_message}"
         print(message_to_find)
 
         if self.check_for_message(message_to_find):
